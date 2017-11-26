@@ -51,6 +51,10 @@ values."
      spell-checking
      syntax-checking
      ;; version-control
+     ;; -------------------- additional layers --------------------
+     chinese
+     ;; -------------------- self-build layers --------------------
+     lumpy
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -66,6 +70,7 @@ values."
                                     doc-view
                                     lorem-ipsum
                                     vi-tilde-fringe
+                                    chinese-pyim
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -267,7 +272,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -313,9 +318,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
       '(("melpa-cn" . "http://elpa.zilongshanren.com/melpa/")
         ("org-cn"   . "http://elpa.zilongshanren.com/org/")
         ("gnu-cn"   . "http://elpa.zilongshanren.com/gnu/")))
+  ;; 防止Emacs启动时挂起
+  (setq tramp-ssh-controlmaster-options
+        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   )
 
+
 (defun dotspacemacs/user-config ()
+  ;; 设置emacs底部状态栏形状
   (setq powerline-default-separator 'arrow)
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -323,11 +333,17 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (evilified-state-evilify-map occur-mode-map
+    :mode occur-mmode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
+(load custom-file 'no-error 'no-message)
 (custom-set-variables
+
+
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
